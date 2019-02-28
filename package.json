@@ -1,0 +1,29 @@
+{
+  "name": "cpose",
+  "version": "0.0.1",
+  "description": "Face recognition",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "OpenCV",
+    "node"
+  ],
+  "author": "Jonathan Vilella",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "canvas": "^2.3.1",
+    "express": "4.16.4",
+    "opencv": "^6.0.0",
+    "pureimage": "^0.1.6",
+    "socket.io": "^2.2.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}

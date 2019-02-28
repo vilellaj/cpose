@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>CPOSE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <script src="main.js"></script>
+</head>
+
+<body>
+    <style>
+        .total-wrapper {
+            margin: 0 auto;
+            width: 300px;
+        }
+
+        #total {
+            font-size: 3em;
+            font-weight: 700;
+            color: blue;
+        }
+    </style>
+    <video id="player" autoplay="true"></video>
+    <div class="total-wrapper">
+        <div id="total"></div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        (() => {
+            const total = document.getElementById('total');
+            const socket = io();
+            socket.emit('handshake', true);
+
+            socket.on('faces', (result) => {
+                total.innerHTML = result.count;
+            });
+
+            const mediaOptions = { audio: false, video: true };
+            let video;
+
+            const success = (stream) => {
+                video = document.querySelector("#player");
+                video.srcObject = stream;
+                startCapturing();
+            }
+
+            const startCapturing = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 640;
+                canvas.height = 480;
+                const ctx = canvas.getContext('2d');
+
+                setInterval(() => {
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const dataURI = canvas.toDataURL('image/jpeg');
+                    socket.emit('image', dataURI);
+                }, 500);
+            }
+
+            if (!navigator.getUserMedia) {
+                navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+            }
+
+            if (!navigator.getUserMedia) {
+                return alert('getUserMedia not supported in this browser.');
+            }
+
+            navigator.getUserMedia(mediaOptions, success, (e) => {
+                console.dir(e);
+            });
+        })();
+    </script>
+</body>
+
+</html>
